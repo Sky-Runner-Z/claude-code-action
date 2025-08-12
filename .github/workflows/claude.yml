@@ -18,7 +18,7 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: Sky-Runner-Z/claude-code-action@Pre-release
+        uses: Sky-Runner-Z/claude-code-action@test
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           allowed_tools: "Bash(bun install),Bash(bun test:*),Bash(bun run format),Bash(bun typecheck)"
