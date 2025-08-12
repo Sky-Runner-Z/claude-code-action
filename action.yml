@@ -140,12 +140,14 @@ runs:
       run: |
         cd ${GITHUB_ACTION_PATH}
         bun install
+        echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
 
     - name: Prepare action
       id: prepare
       shell: bash
       run: |
         bun run ${GITHUB_ACTION_PATH}/src/entrypoints/prepare.ts
+        echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       env:
         MODE: ${{ inputs.mode }}
         TRIGGER_PHRASE: ${{ inputs.trigger_phrase }}
