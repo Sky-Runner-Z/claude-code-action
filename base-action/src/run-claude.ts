@@ -167,6 +167,9 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
     env: {
       ...process.env,
       ...config.env,
+      // Custom Anthropic configuration
+      ...(process.env.ANTHROPIC_BASE_URL && { ANTHROPIC_BASE_URL: process.env.ANTHROPIC_BASE_URL }),
+      ...(process.env.ANTHROPIC_AUTH_TOKEN && { ANTHROPIC_AUTH_TOKEN: process.env.ANTHROPIC_AUTH_TOKEN }),
     },
   });
 
