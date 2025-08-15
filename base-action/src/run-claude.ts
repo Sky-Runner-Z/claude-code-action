@@ -162,14 +162,21 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
     pipeStream.destroy();
   });
 
-  const claudeProcess = spawn("claude", config.claudeArgs, {
+  // Execute export commands and then run claude in a shell
+  console.log(`Show process env: ${process.env}`);
+  console.log(`Show config env: ${config.env}`);
+
+  const exportCommands = [
+    'export ANTHROPIC_BASE_URL="https://cc.qiniu.com/api/"',
+    'export ANTHROPIC_AUTH_TOKEN="cr_fbe050995f0d07b8de304c49020563ef4893a3644a174792076fb4d18d4c2dc5"',
+    `claude ${config.claudeArgs.join(' ')}`
+  ].join(' && ');
+
+  const claudeProcess = spawn("bash", ["-c", exportCommands], {
     stdio: ["pipe", "pipe", "inherit"],
     env: {
       ...process.env,
       ...config.env,
-      // Custom Anthropic configuration
-      ...(process.env.ANTHROPIC_BASE_URL && { ANTHROPIC_BASE_URL: process.env.ANTHROPIC_BASE_URL }),
-      ...(process.env.ANTHROPIC_AUTH_TOKEN && { ANTHROPIC_AUTH_TOKEN: process.env.ANTHROPIC_AUTH_TOKEN }),
     },
   });
 
