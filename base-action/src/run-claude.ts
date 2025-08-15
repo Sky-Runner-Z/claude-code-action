@@ -150,30 +150,16 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   // Output to console
   console.log(`Running Claude with prompt from file: ${config.promptPath}`);
 
-  // Start sending prompt to pipe in background
-  const catProcess = spawn("cat", [config.promptPath], {
-    stdio: ["ignore", "pipe", "inherit"],
-  });
-  const pipeStream = createWriteStream(PIPE_PATH);
-  catProcess.stdout.pipe(pipeStream);
-
-  console.log(`1Show process env: `);
-  console.log(`1Show config env: `);
-
-  catProcess.on("error", (error) => {
-    console.error("Error reading prompt file:", error);
-    pipeStream.destroy();
-  });
+  console.log(`Debug: About to start processes`);
 
   // Execute export commands and then run claude in a shell
-  console.log(`2Show config env: ${config.env}`);
-  console.log(`2Show process env: ${process.env}`);
-
   const exportCommands = [
-    'export ANTHROPIC_BASE_URL=""',
-    'export ANTHROPIC_AUTH_TOKEN=""',
+    'export ANTHROPIC_BASE_URL="https://cc.qiniu.com/api/"',
+    'export ANTHROPIC_AUTH_TOKEN="***"',
     `claude ${config.claudeArgs.join(' ')}`
   ].join(' && ');
+
+  console.log(`Debug: Starting Claude process with command: ${exportCommands}`);
 
   const claudeProcess = spawn("bash", ["-c", exportCommands], {
     stdio: ["pipe", "pipe", "inherit"],
@@ -182,6 +168,24 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
       ...config.env,
     },
   });
+
+  console.log(`Debug: Claude process started, PID: ${claudeProcess.pid}`);
+
+  // Start sending prompt to pipe in background - AFTER claude process is started
+  console.log(`Debug: Starting cat process to send prompt`);
+  const catProcess = spawn("cat", [config.promptPath], {
+    stdio: ["ignore", "pipe", "inherit"],
+  });
+  const pipeStream = createWriteStream(PIPE_PATH);
+  
+  catProcess.on("error", (error) => {
+    console.error("Error reading prompt file:", error);
+    pipeStream.destroy();
+  });
+
+  // Pipe cat output to the named pipe
+  catProcess.stdout.pipe(pipeStream);
+  console.log(`Debug: Cat process piped to named pipe`);
 
   // Handle Claude process errors
   claudeProcess.on("error", (error) => {
@@ -225,8 +229,10 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   });
 
   // Pipe from named pipe to Claude
+  console.log(`Debug: Starting pipe reader process`);
   const pipeProcess = spawn("cat", [PIPE_PATH]);
   pipeProcess.stdout.pipe(claudeProcess.stdin);
+  console.log(`Debug: Pipe reader connected to Claude stdin`);
 
   // Handle pipe process errors
   pipeProcess.on("error", (error) => {

@@ -67,16 +67,21 @@ export async function setupClaudeCodeSettings(
   await $`echo ${JSON.stringify(settings, null, 2)} > ${settingsPath}`.quiet();
   console.log(`Settings saved successfully`);
 
-  if (slashCommandsDir) {
+  if (slashCommandsDir && slashCommandsDir.trim()) {
     console.log(
       `Copying slash commands from ${slashCommandsDir} to ${home}/.claude/`,
     );
     try {
-      await $`test -d ${slashCommandsDir}`.quiet();
-      await $`cp ${slashCommandsDir}/*.md ${home}/.claude/ 2>/dev/null || true`.quiet();
-      console.log(`Slash commands copied successfully`);
+      // Check if directory exists first
+      const dirExists = await $`test -d ${slashCommandsDir}`.quiet().then(() => true).catch(() => false);
+      if (dirExists) {
+        await $`cp ${slashCommandsDir}/*.md ${home}/.claude/ 2>/dev/null || true`.quiet();
+        console.log(`Slash commands copied successfully`);
+      } else {
+        console.log(`Slash commands directory does not exist: ${slashCommandsDir}`);
+      }
     } catch (e) {
-      console.log(`Slash commands directory not found or error copying: ${e}`);
+      console.log(`Error copying slash commands: ${e}`);
     }
   }
 }
