@@ -157,14 +157,17 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   const pipeStream = createWriteStream(PIPE_PATH);
   catProcess.stdout.pipe(pipeStream);
 
+  console.log(`1Show process env: `);
+  console.log(`1Show config env: `);
+
   catProcess.on("error", (error) => {
     console.error("Error reading prompt file:", error);
     pipeStream.destroy();
   });
 
   // Execute export commands and then run claude in a shell
-  console.log(`Show process env: ${process.env}`);
-  console.log(`Show config env: ${config.env}`);
+  console.log(`2Show config env: ${config.env}`);
+  console.log(`2Show process env: ${process.env}`);
 
   const exportCommands = [
     'export ANTHROPIC_BASE_URL=""',
