@@ -1,6 +1,6 @@
 name: Claude Code
 
-on: [push]
+
 
 jobs:
   claude:
@@ -18,9 +18,21 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: Sky-Runner-Z/claude-code-action@test
+        uses: Sky-Runner-Z/claude-code-action@v0.0.0
+        with:
+          # 只使用一种认证方式
+          claude_code_oauth_token: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}  # 添加到全局 env
+          github_token: ${{ secrets.G_TOKEN }}
+          model: "claude-3-5-sonnet-20241022"
+        env:
+          # 确保 ANTHROPIC_BASE_URL 传递到 action
+          ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}  # 添加到全局 env
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           allowed_tools: "Bash(bun install),Bash(bun test:*),Bash(bun run format),Bash(bun typecheck)"
           custom_instructions: "You have also been granted tools for editing files and running bun commands (install, run, test, typecheck) for testing your changes: bun install, bun test, bun run format, bun typecheck."
           model: "claude-opus-4-1-20250805"
+          
