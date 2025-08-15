@@ -158,7 +158,7 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   // debug
   // console.log("111:" + process.env.INPUT_ANTHROPIC_BASE_URL);
   // console.log("222:" + process.env.ANTHROPIC_BASE_URL);
-  console.log("222:" + process.env.ANTHROPIC_BASE_URL === "https://cc.qiniu.com/api/");
+  console.log(process.env.ANTHROPIC_BASE_URL === "https://cc.qiniu.com/api/");
 
   const claudeProcess = spawn("claude", config.claudeArgs, {
     stdio: ["pipe", "pipe", "inherit"],
