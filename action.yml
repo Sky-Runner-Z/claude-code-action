@@ -97,6 +97,12 @@ inputs:
     description: "Use Google Vertex AI with OIDC authentication instead of direct Anthropic API"
     required: false
     default: "false"
+  anthropic_base_url:
+    description: "Anthropic Base URL (required for undirect API"
+    required: false
+  anthropic_auth_token:
+    description: "Claude Code Auth token (alternative to anthropic_api_key)"
+    required: false
 
   max_turns:
     description: "Maximum number of conversation turns"
@@ -226,6 +232,8 @@ runs:
         ANTHROPIC_BASE_URL: ${{ env.ANTHROPIC_BASE_URL }}
         CLAUDE_CODE_USE_BEDROCK: ${{ inputs.use_bedrock == 'true' && '1' || '' }}
         CLAUDE_CODE_USE_VERTEX: ${{ inputs.use_vertex == 'true' && '1' || '' }}
+        ANTHROPIC_BASE_URL: ${{ inputs.anthropic_base_url }}
+        ANTHROPIC_AUTH_TOKEN: ${{ inputs.anthropic_auth_token }}
 
         # AWS configuration
         AWS_REGION: ${{ env.AWS_REGION }}
