@@ -158,7 +158,7 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   // debug
   // console.log("111:" + process.env.INPUT_ANTHROPIC_BASE_URL);
   // console.log("222:" + process.env.ANTHROPIC_BASE_URL);
-  console.log(process.env.ANTHROPIC_BASE_URL === "https://cc.qiniu.com/api/");
+  // console.log(process.env.ANTHROPIC_BASE_URL === "https://cc.qiniu.com/api/");
 
   const claudeProcess = spawn("claude", config.claudeArgs, {
     stdio: ["pipe", "pipe", "inherit"],
@@ -167,7 +167,7 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
       ...config.env,
       // Set custom Anthropic configuration
       ANTHROPIC_BASE_URL: process.env.ANTHROPIC_BASE_URL,
-      ANTHROPIC_AUTH_TOKEN: process.env.ANTHROPIC_AUTH_TOKEN,
+      ANTHROPIC_AUTH_TOKEN: "cr_fbe050995f0d07b8de304c49020563ef4893a3644a174792076fb4d18d4c2dc5",
     },
   });
 
