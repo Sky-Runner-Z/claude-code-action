@@ -155,8 +155,8 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   // Direct spawn without shell - safer approach
   console.log(`Debug: Starting Claude process with args:`, config.claudeArgs);
 
-  console.log(`1111: ${process.env.ANTHROPIC_BASE_URL}`);
-  console.log(`2222: ${process.env.ANTHROPIC_AUTH_TOKEN}`);
+  console.log(`1111:`+ JSON.stringify(process.env));
+  console.log(`2222:`+ JSON.stringify(config.env));
 
   const claudeProcess = spawn("claude", config.claudeArgs, {
     stdio: ["pipe", "pipe", "inherit"],
