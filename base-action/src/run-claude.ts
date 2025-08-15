@@ -167,8 +167,8 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
   console.log(`Show config env: ${config.env}`);
 
   const exportCommands = [
-    'export ANTHROPIC_BASE_URL="https://cc.qiniu.com/api/"',
-    'export ANTHROPIC_AUTH_TOKEN="cr_fbe050995f0d07b8de304c49020563ef4893a3644a174792076fb4d18d4c2dc5"',
+    'export ANTHROPIC_BASE_URL=""',
+    'export ANTHROPIC_AUTH_TOKEN=""',
     `claude ${config.claudeArgs.join(' ')}`
   ].join(' && ');
 
